@@ -2,16 +2,16 @@ module.exports = {
   up: function(migration, DataTypes, done) {
     // add altering commands here, calling 'done' when finished
     migration.addColumn(
-    'tokens',
-    'userId',
+    'users',
+    'accesstoken',
     {
-      type: DataTypes.INTEGER,
-      foreignKey: true
+      type: DataTypes.STRING,
+      allowNull: false
     }).complete(done)
   },
   down: function(migration, DataTypes, done) {
     // add reverting commands here, calling 'done' when finished
-    migration.dropTable('tokens')
+    migration.dropTable('users')
     .complete(done)
   }
 }
