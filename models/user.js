@@ -6,9 +6,7 @@ module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('user', {
     username: {
       type: DataTypes.STRING,
-      validate: {
-        notEmpty: true
-      }
+      allowNull: false
     },
     twitterid: {
       type: DataTypes.INTEGER,

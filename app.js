@@ -21,71 +21,48 @@ app.use(morgan('dev'));
 app.use(express.static(__dirname + '/public'));
 
 app.use(cookieSession( {
-  secret: 'tempkey',
-  name: 'tempsession',
+  secret: process.env.COOKIE_SECRET,
+  name: process.env.COOKIE_NAME,
   // this is in milliseconds
   maxage: 36000000
   })
 );
 
-passport.use(new twitterStrategy ({
-  consumerKey: '79D40sYF18Sa1Itv4CaorUMx4',
-  consumerSecret: 'xKQ0UaikVNUsAHJpSvSgOlkkooBVStuSjM23g6DLPiXabtNVKH',
-  callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
-},
-function(accessToken, tokenSecret, profile, done) {
- process.nextTick(function () {
-  console.log(profile);
-  console.log(accessToken);
-  console.log(tokenSecret);
-  db.user.findOrCreate({username: profile.username, twitterid: profile.id, accesstoken: accessToken, tokensecret: tokenSecret}, function(err, user) {
-    if (err) {
-      done(err)
-    }
-    done(null, user);
-  })
-})
-}))
-
-// passport.use(new twitterStrategy ({
-//  consumerKey: '79D40sYF18Sa1Itv4CaorUMx4',
-//  consumerSecret: 'xKQ0UaikVNUsAHJpSvSgOlkkooBVStuSjM23g6DLPiXabtNVKH',
-//  callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
-// },
-// function(accessToken, tokenSecret, profile, done) {
-//   console.log("HIII BEFORE FIND")
-// db.user.find({ where: {twitterid: profile.id} }, function(err, user) {
-//   console.log("afer user find")
-//  if(err) { console.log(err); }
-//  if (!err && user != null) {
-//   console.log("in null user")
-//    done(null, user);
-//  } else {
-//   console.log("in new user create")
-//    var user = new db.user({
-//      twitterid: profile.id,
-//      username: profile.username,
-//      accesstoken: 'asdfd',
-//      tokensecret: 'sdfd'
-//    });
-//    user.save(function(err) {
-//      if(err) {
-//        console.log(err);
-//      } else {
-//        console.log("saving user ...");
-//        done(null, user);
-//      };
-//    });
-//  };
-// });
-// }
-// ));
-
-
-// get passport started
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+passport.use(new twitterStrategy ({
+  consumerKey: process.env.TWITTER_KEY,
+  consumerSecret: process.env.TWITTER_SECRET,
+  callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
+},
+function(accessToken, tokenSecret, profile, done) {
+  // console.log(profile);
+//  process.nextTick(function () {
+  db.user.findOrCreate({username: profile.username,
+    twitterid: profile.id, accesstoken: accessToken, 
+    tokensecret: tokenSecret}).success(function(user, created) {
+      console.log("user", user);
+      console.log("created", created);
+      done(null, user);
+  })
+// })
+return 
+}))
+
+app.get('/auth/twitter',
+passport.authenticate('twitter'),
+function(req, res){
+});
+
+app.get('/auth/twitter/callback',
+passport.authenticate('twitter', { failureRedirect: '/users' }),
+function(req, res) {
+  res.redirect('/search');
+});
+
+// get passport started
 
 // prepare our serialize functions
 passport.serializeUser(function(user, done){
@@ -105,55 +82,27 @@ passport.deserializeUser(function(id, done) {
 })
 
 app.get('/', function(req, res) {
-  res.render("index");
+  res.render("index", {isAuthenticated: req.isAuthenticated()});
 })
-
-
-app.get('/auth/twitter',
-passport.authenticate('twitter'),
-function(req, res){
-});
-app.get('/auth/twitter/callback',
-passport.authenticate('twitter', { failureRedirect: '/users' }),
-function(req, res) {
- res.redirect('/search');
-});
 
 
 
 
 app.get('/users', function(req, res) {
-  res.render("users");
-})
-
-
-app.get('/users/:id', function(req, res) {
-  res.render("show");
-})
-
-app.get ('/users/:id/edit', function(req, res) {
-  res.render("edit");
-})
+  db.user.findAll({order: [['createdAt', 'DESC']]}).success(function(allUsers) {
+    res.render('users', { isAuthenticated: req.isAuthenticated(),
+    users: allUsers});
+  });
+});
 
 app.get('/search', function(req, res) {
-  res.render("search");
+  res.render("search", {isAuthenticated: req.isAuthenticated()});
 })
 
-
-app.post('/user/:id', function(req, res) {
-  // post content to user's page
-  res.render("show");
-})
-
-app.post('/search', function(req, res) {
-  // http request to return pictures from search
-  // from results, randomly generate a single pic
-})
-
-app.put('/users/:id', function(req, res) {
-  // update additional details
-})
-
+app.get('/logout', function(req,res){
+  req.logout();
+  res.redirect('/');
+});
 
 app.get('*', function(req, res) {
   res.render("error");

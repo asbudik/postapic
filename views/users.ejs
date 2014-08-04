@@ -1,0 +1,25 @@
+<% include ./partials/header.ejs %> 
+<% if (!isAuthenticated) {%>
+    <a href="/auth/twitter">Sign in with Twitter</a>
+  <% } else { %>
+    <a href="/logout"><button class="btn btn-primary">Logout</button></a>
+    <h4>Welcome</h4>
+
+    <form action="/search" method = "post">
+
+      <p>
+        <label for="user">Search Users: </label> <input type="text" name="username" id="user" autofocus>
+      </p>
+      <p>
+        <input type="submit" class ="btn btn-primary ">
+      </p>
+    </form>
+
+    <h1>All Users</h1>
+    <ul>
+      <% users.forEach(function(user) { %>
+        <li><%= user.username %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+<% include ./partials/footer.ejs %> 
