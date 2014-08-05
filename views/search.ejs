@@ -10,18 +10,17 @@
       <input type="text" name="searchTerm" id="message">
       <input type="submit" id="submit">
     </form>
-
-    <% photostuff.forEach(function(photo) { %>
-      <%= photo.title %>
-    <% }) %>
-    <script>
-      var form = $("#send_message")
-      var message = $("#message")
-      form.submit(function(e) {
-        e.preventDefault();
-        alert(message.val))
-      })
-    </script>
+    <% if ( foundPhoto !== undefined) { %>
+    <img class="foundphoto" src="<%= foundPhoto.url_m %>"></img>
+    <% } %>
+     <script>
+    //   var form = $("#send_message")
+    //   var message = $("#message")
+    //   form.submit(function(e) {
+    //     e.preventDefault();
+    //     alert(message.val)
+    //   })
+    // </script>
   <% } %>
 <% include ./partials/footer.ejs %> 
 

@@ -20,6 +20,8 @@
     "logger": "0.0.1",
     "method-override": "^2.1.2",
     "morgan": "^1.2.2",
+    "node-twitter": "^0.5.2",
+    "node-twitter-api": "^1.2.3",
     "oauth": "^0.9.12",
     "passport": "^0.2.0",
     "passport-local": "^1.0.0",

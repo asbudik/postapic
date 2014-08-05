@@ -1,6 +1,7 @@
 var express = require("express"),
   bodyParser = require("body-parser"),
   request = require("request"),
+  twitterAPI = require('node-twitter-api'),
   passport = require("passport"),
   twitterStrategy = require('passport-twitter').Strategy,
   passportLocal = require("passport-local"),
@@ -35,6 +36,25 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+// post to twitter
+
+// var twitter = new twitterAPI({
+//   consumerKey: process.env.TWITTER_KEY,
+//   consumerSecret: process.env.TWITTER_SECRET,
+//   callback: 'http://127.0.0.1:3000/auth/twitter/callback'
+// });
+
+// twitter.statuses("update", { status: "Hello world!" },
+//   // accessToken,
+//   // accessTokenSecret,
+//   function(error, data, response) {
+//     if (error) {
+//         // something went wrong
+//     } else {
+//         // data contains the data sent by twitter
+//     }
+//   }
+// );
 // sign-in/log-in to twitter
 
 passport.use(new twitterStrategy ({
@@ -91,28 +111,24 @@ app.get('/', function(req, res) {
   res.render("index", {isAuthenticated: req.isAuthenticated()});
 })
 
-app.get('/search', function(req, res) {)
-  var oauth = new OAuth.OAuth(
-    'https://api.flickr.com/oauth/request_token',
-    'https://api.flickr.com/oauth/access_token',
-    process.env.FLICKR_KEY,
-    process.env.FLICKR_SECRET,
-    '1.0A',
-    null,
-    'HMAC-SHA1'
-  );
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
-  var searchURL ="https://api.flickr.com/services/rest/?format=json&method=flickr.photos.search&tags=rainbow&api_key=" + process.env.FLICKR_KEY + "&nojsoncallback=1";
-
-  oauth.get(searchURL, null, null, function(e, data, res) {
-    // console.log(e);
-    var flickr = JSON.parse(data)
-    var photostuff = flickr.photos.photo
-    console.log(photostuff);
-    // console.log(res);
-  })
-  res.render('search', {isAuthenticated: req.isAuthenticated(),
-  photostuff: photostuff}
+app.get('/search', function(req, res) {
+  var searchURL ="https://api.flickr.com/services/rest/?format=json&method=flickr.photos.search&text=" + req.query.searchTerm + "&api_key=" + process.env.FLICKR_KEY + "&nojsoncallback=1&media=photos&extras=url_m";
+  console.log(req.query.searchTerm)
+  request(searchURL, function(error, response, body) {
+    if(!error) {
+      console.log(searchURL)
+      var bodyData = JSON.parse(body);
+      var data = bodyData.photos.photo;
+      console.log(data)
+      var foundPhoto = data[getRandomInt(0, data.length-1)]
+      console.log(foundPhoto)
+      res.render("search", {isAuthenticated: req.isAuthenticated(),
+      foundPhoto: foundPhoto})
+    }
   })
 })
 
@@ -122,12 +138,6 @@ app.get('/users', function(req, res) {
     users: allUsers});
   });
 });
-
-
-
-// app.get('/search', function(req, res) {
-//   res.render("search", {isAuthenticated: req.isAuthenticated()});
-// })
 
 app.get('/logout', function(req,res){
   req.logout();
