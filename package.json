@@ -20,10 +20,12 @@
     "logger": "0.0.1",
     "method-override": "^2.1.2",
     "morgan": "^1.2.2",
+    "oauth": "^0.9.12",
     "passport": "^0.2.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.2",
     "pg": "^3.4.0",
+    "request": "^2.39.0",
     "sequelize": "^1.7.9",
     "sequelize-cli": "^0.2.3"
   }
