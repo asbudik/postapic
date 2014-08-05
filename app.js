@@ -115,21 +115,26 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-app.get('/search', function(req, res) {
-  var searchURL ="https://api.flickr.com/services/rest/?format=json&method=flickr.photos.search&text=" + req.query.searchTerm + "&api_key=" + process.env.FLICKR_KEY + "&nojsoncallback=1&media=photos&extras=url_m";
+app.get('/result', function(req, res) {
+  var searchURL ="https://api.flickr.com/services/rest/?format=json&method=flickr.photos.search&tags=" 
+  + req.query.searchTerm + "&api_key=" + process.env.FLICKR_KEY 
+  + "&nojsoncallback=1&media=photos&extras=url_m&page=1&per_page=500&tag_mode=all";
   console.log(req.query.searchTerm)
   request(searchURL, function(error, response, body) {
     if(!error) {
       console.log(searchURL)
       var bodyData = JSON.parse(body);
+      console.log(bodyData);
       var data = bodyData.photos.photo;
-      console.log(data)
       var foundPhoto = data[getRandomInt(0, data.length-1)]
-      console.log(foundPhoto)
-      res.render("search", {isAuthenticated: req.isAuthenticated(),
+      res.render("result", {isAuthenticated: req.isAuthenticated(),
       foundPhoto: foundPhoto})
     }
   })
+})
+
+app.get('/search', function(req, res) {
+  res.render("search", {isAuthenticated: req.isAuthenticated()});
 })
 
 app.get('/users', function(req, res) {
@@ -145,10 +150,12 @@ app.get('/logout', function(req,res){
 });
 
 app.get('*', function(req, res) {
-  res.render("error");
+  res.render("error", { isAuthenticated: req.isAuthenticated()});
 })
 
 app.listen(3000, function() {
   console.log("Running");
 })
+
+
 

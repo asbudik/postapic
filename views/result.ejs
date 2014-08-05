@@ -1,15 +1,15 @@
+
 <% include ./partials/header.ejs %> 
   <% if (!isAuthenticated) {%>
     <a href="/auth/twitter">Sign in with Twitter</a>
   <% } else { %>
     <a href="/logout"><button class="btn btn-primary">Logout</button></a>
     <h4>Welcome</h4>
-    <h1> Find a pic</h1>
-
-    <form id="send_message" action="/result">
-      <input type="text" name="searchTerm" id="message">
-      <input type="submit" id="submit">
-    </form>
+    <% if ( foundPhoto !== undefined) { %>
+      <img class="foundphoto" src="<%= foundPhoto.url_m %>"></img>
+    <% } else {%>
+      <h1>Oops! Did not return any results.</h1>
+    <% } %>
      <script>
     //   var form = $("#send_message")
     //   var message = $("#message")

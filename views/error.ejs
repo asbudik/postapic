@@ -1,5 +1,10 @@
 <% include ./partials/header.ejs %> 
-<a href="/auth/twitter">Sign in with Twitter</a>
+
+<% if (!isAuthenticated) { %>
+  <a href="/auth/twitter">Sign in with Twitter</a>
+<% } else { %>
+  <a href="/logout"><button class="btn btn-primary">Logout</button></a>
+<% } %>
 
 <h1>Oops! That page doesn't exist!</h1>
 
