@@ -1,6 +1,3 @@
-var passport = require("passport");
-var passportLocal = require("passport-local");
-var twitterStrategy = require('passport-twitter').Strategy;
 
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('user', {

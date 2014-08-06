@@ -12,7 +12,10 @@ var express = require("express"),
   methodOverride = require('method-override'),
   morgan = require('morgan'),
   _ = require('lodash'),
-  OAuth = require('oauth'),
+  oauth = require('oauth'),
+  Formdata = require('form-data'),
+  utf8 = require('utf8'),
+  fs = require('fs'),
   app = express();
 
 // Middleware for ejs, grabbing HTML and including static files
@@ -36,16 +39,43 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-// OAuth
-var oauth = new OAuth.OAuth(
-  "req.user.accesstoken",
-  "req.user.tokensecret",
-  process.env.TWITTER_KEY,
-  process.env.TWITTER_SECRET,
-  '1.0A',
-  null,
-  'HMAC-SHA1'
-);
+
+status = utf8.encode(status);
+
+var form = new FormData();
+form.append('status', status)
+form.append('media[]', fs.createReadStream(file));
+
+// Twitter OAuth
+form.getLength(function(err, length){
+  if (err) {
+    return requestCallback(err);
+  }
+  var oauth = { 
+    consumer_key: consumer_key,
+    consumer_secret: consumer_secret,
+    token: access_token,
+    token_secret: access_token_secret
+  };
+  var r = request.post({url:"https://api.twitter.com/1.1/statuses/update_with_media.json", oauth:oauth, host: "api.twitter.com", protocol: "https:"}, requestCallback);
+  r._form = form;
+  r.setHeader('content-length', length);
+});
+
+function requestCallback(err, res, body) {
+  if(err) {
+      throw err;
+  } else {
+      console.log("Tweet and Image uploaded successfully!");
+  }
+}
+
+// Post with Twitter
+var twitter = new twitterAPI({
+  consumerKey: process.env.TWITTER_KEY,
+  consumerSecret: process.env.TWITTER_SECRET,
+  callback: 'http://127.0.0.1:3000/auth/twitter/callback'
+});
 
 // Login with Twitter
 passport.use(new twitterStrategy ({
@@ -56,9 +86,9 @@ passport.use(new twitterStrategy ({
 function(accessToken, tokenSecret, profile, done) {
 
   db.user.findOrCreate({username: profile.username,
-  twitterid: profile.id, accesstoken: accessToken, 
-  tokensecret: tokenSecret}).success(function(user, created) {
-
+  twitterid: profile.id, icon: profile.photos[0].value, accesstoken: accessToken, 
+  tokensecret: tokenSecret }).success(function(user, created) {
+    console.log(profile.photos[0].value)
     done(null, user);
   })
 }))
@@ -75,7 +105,6 @@ passport.authenticate('twitter', { failureRedirect: '/users' }),
 function(req, res) {
   res.redirect('/search');
 });
-
 // prepare our serialize functions
 passport.serializeUser(function(user, done){
   console.log("SERIALIZED");
@@ -94,7 +123,9 @@ passport.deserializeUser(function(id, done) {
 })
 
 
+// *********************
 // ***END BOILERPLATE***
+// *********************
 
 
 function getRandomInt(min, max) {
@@ -102,6 +133,9 @@ function getRandomInt(min, max) {
   // single, randomized photo from a search query.
   return Math.floor(Math.random() * (max - min)) + min;
 }
+
+// grab photo id for unique downloads
+
 
 app.get('/result', function(req, res) {
   if (req.query.searchpic === 'stock') {
@@ -111,13 +145,12 @@ app.get('/result', function(req, res) {
 
     request(searchURL, function(error, response, body) {
       if(!error) {
-
         var bodyData = JSON.parse(body);
         var data = bodyData.photos.photo;
-        var foundPhoto = data[getRandomInt(0, data.length-1)].url_m;
-
+        var foundPhoto = data[getRandomInt(0, data.length-1)];
+        var photoId = foundPhoto.id;
         res.render("result", {isAuthenticated: req.isAuthenticated(),
-        foundPhoto: foundPhoto})
+        foundPhoto: foundPhoto.url_m})
       }
     })
   } else {
@@ -127,14 +160,15 @@ app.get('/result', function(req, res) {
 
         var bodyData = JSON.parse(body);
         var data = bodyData.result;
-        var foundPhoto = data[getRandomInt(0, data.length-1)].imageUrl;
-
+        var foundPhoto = data[getRandomInt(0, data.length-1)];
+        var photoId = foundPhoto.generatorID;
         res.render("result", {isAuthenticated: req.isAuthenticated(),
-        foundPhoto: foundPhoto})
+        foundPhoto: foundPhoto.imageUrl})
       }
     })
   }
 })
+
 
 app.get('/', function(req, res) {
   res.render("index", {isAuthenticated: req.isAuthenticated()});
