@@ -6,6 +6,11 @@
     <a href="/logout"><button class="btn btn-primary">Logout</button></a>
     <h4>Welcome</h4>
     <% if ( foundPhoto !== undefined) { %>
+    <form method="post" action="/show">
+      <input type="hidden" name="photo" value="<%= foundPhoto %>">
+      <input type="hidden" name="photoID" value="<%= photoId %>">
+      <input type="submit">
+    </form>
       <img class="foundphoto" src="<%= foundPhoto %>"></img>
     <% } else {%>
       <h1>Oops! Did not return any results.</h1>

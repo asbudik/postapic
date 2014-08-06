@@ -13,14 +13,12 @@ var express = require("express"),
   morgan = require('morgan'),
   _ = require('lodash'),
   oauth = require('oauth'),
-  Formdata = require('form-data'),
-  utf8 = require('utf8'),
   fs = require('fs'),
   app = express();
 
 // Middleware for ejs, grabbing HTML and including static files
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({extended: true}) ); 
+app.use(bodyParser.urlencoded({extended: true})); 
 app.use(methodOverride("_method"));
 
 app.use(morgan('dev'));
@@ -39,43 +37,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-
-status = utf8.encode(status);
-
-var form = new FormData();
-form.append('status', status)
-form.append('media[]', fs.createReadStream(file));
-
-// Twitter OAuth
-form.getLength(function(err, length){
-  if (err) {
-    return requestCallback(err);
-  }
-  var oauth = { 
-    consumer_key: consumer_key,
-    consumer_secret: consumer_secret,
-    token: access_token,
-    token_secret: access_token_secret
-  };
-  var r = request.post({url:"https://api.twitter.com/1.1/statuses/update_with_media.json", oauth:oauth, host: "api.twitter.com", protocol: "https:"}, requestCallback);
-  r._form = form;
-  r.setHeader('content-length', length);
-});
-
-function requestCallback(err, res, body) {
-  if(err) {
-      throw err;
-  } else {
-      console.log("Tweet and Image uploaded successfully!");
-  }
-}
-
 // Post with Twitter
-var twitter = new twitterAPI({
-  consumerKey: process.env.TWITTER_KEY,
-  consumerSecret: process.env.TWITTER_SECRET,
-  callback: 'http://127.0.0.1:3000/auth/twitter/callback'
-});
+
+
 
 // Login with Twitter
 passport.use(new twitterStrategy ({
@@ -86,7 +50,7 @@ passport.use(new twitterStrategy ({
 function(accessToken, tokenSecret, profile, done) {
 
   db.user.findOrCreate({username: profile.username,
-  twitterid: profile.id, icon: profile.photos[0].value, accesstoken: accessToken, 
+  twitterid: profile.id, accesstoken: accessToken, 
   tokensecret: tokenSecret }).success(function(user, created) {
     console.log(profile.photos[0].value)
     done(null, user);
@@ -101,9 +65,9 @@ function(req, res){
 });
 
 app.get('/auth/twitter/callback',
-passport.authenticate('twitter', { failureRedirect: '/users' }),
+passport.authenticate('twitter', { failureRedirect: '/' }),
 function(req, res) {
-  res.redirect('/search');
+  res.redirect('/');
 });
 // prepare our serialize functions
 passport.serializeUser(function(user, done){
@@ -145,12 +109,13 @@ app.get('/result', function(req, res) {
 
     request(searchURL, function(error, response, body) {
       if(!error) {
+
         var bodyData = JSON.parse(body);
         var data = bodyData.photos.photo;
         var foundPhoto = data[getRandomInt(0, data.length-1)];
         var photoId = foundPhoto.id;
         res.render("result", {isAuthenticated: req.isAuthenticated(),
-        foundPhoto: foundPhoto.url_m})
+        foundPhoto: foundPhoto.url_m, photoId: photoId})
       }
     })
   } else {
@@ -163,7 +128,7 @@ app.get('/result', function(req, res) {
         var foundPhoto = data[getRandomInt(0, data.length-1)];
         var photoId = foundPhoto.generatorID;
         res.render("result", {isAuthenticated: req.isAuthenticated(),
-        foundPhoto: foundPhoto.imageUrl})
+        foundPhoto: foundPhoto.imageUrl, photoId: photoId})
       }
     })
   }
@@ -178,12 +143,48 @@ app.get('/search', function(req, res) {
   res.render("search", {isAuthenticated: req.isAuthenticated()});
 });
 
+app.get('/show', function(req, res) {
+  res.render('show', {isAuthenticated: req.isAuthenticated()})
+})
 app.get('/users', function(req, res) {
   db.user.findAll({order: [['createdAt', 'DESC']]}).success(function(allUsers) {
     res.render('users', { isAuthenticated: req.isAuthenticated(),
     users: allUsers});
   });
 });
+
+
+app.post('/show', function(req, res) {
+  var twitter = new twitterAPI({
+    consumerKey: process.env.TWITTER_KEY,
+    consumerSecret: process.env.TWITTER_SECRET,
+    callback: 'http://127.0.0.1:3000/auth/twitter/callback'
+  });
+  
+  var photoPath = './photos/' + req.body.photoID;
+
+  request.get(req.body.photo).pipe(fs.createWriteStream(photoPath));
+
+  twitter.statuses("update_with_media", {
+    status: "#PostaPic",
+    media: [photoPath]
+    },
+    req.user.accesstoken,
+    req.user.tokensecret,
+    function(error, data, response) {
+      if (error) {
+        console.log("error", error)
+          console.log(req.body.photo)
+          console.log(req.body.photoID)
+      } else {
+        console.log("photo id colon:", req.body.photoID)
+        console.log("photo url colon:", req.body.photo)
+      }
+    }
+  );
+  res.redirect('show');
+})
+
 
 app.get('/logout', function(req,res){
   req.logout();
@@ -193,6 +194,7 @@ app.get('/logout', function(req,res){
 app.get('*', function(req, res) {
   res.render("error", { isAuthenticated: req.isAuthenticated()});
 });
+
 
 app.listen(3000, function() {
   console.log("Running");
