@@ -7,17 +7,19 @@
     <h1> Find a pic</h1>
 
     <form id="send_message" action="/result">
+      <input type="radio" name="searchpic" id="check" value="stock" autofocus>stock image</input>
+      <input type="radio" name="searchpic" id="check"value="meme">memes</input>
       <input type="text" name="searchTerm" id="message">
       <input type="submit" id="submit">
     </form>
      <script>
-    //   var form = $("#send_message")
-    //   var message = $("#message")
-    //   form.submit(function(e) {
-    //     e.preventDefault();
-    //     alert(message.val)
-    //   })
-    // </script>
+      $(function() {
+        var $radios = $('input:radio[name=searchpic]');
+        if($radios.is(':checked') === false) {
+          $radios.filter('[value=stock]').prop('checked', true);
+        }
+      });
+    </script>
   <% } %>
 <% include ./partials/footer.ejs %> 
 

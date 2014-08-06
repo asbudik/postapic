@@ -36,26 +36,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-// post to twitter
-
-// var twitter = new twitterAPI({
-//   consumerKey: process.env.TWITTER_KEY,
-//   consumerSecret: process.env.TWITTER_SECRET,
-//   callback: 'http://127.0.0.1:3000/auth/twitter/callback'
-// });
-
-// twitter.statuses("update", { status: "Hello world!" },
-//   // accessToken,
-//   // accessTokenSecret,
-//   function(error, data, response) {
-//     if (error) {
-//         // something went wrong
-//     } else {
-//         // data contains the data sent by twitter
-//     }
-//   }
-// );
-// sign-in/log-in to twitter
+var oauth = new OAuth.OAuth(
+  "req.user.accesstoken",
+  "req.user.tokensecret",
+  process.env.TWITTER_KEY,
+  process.env.TWITTER_SECRET,
+  '1.0A',
+  null,
+  'HMAC-SHA1'
+);
 
 passport.use(new twitterStrategy ({
   consumerKey: process.env.TWITTER_KEY,
@@ -65,18 +54,15 @@ passport.use(new twitterStrategy ({
 function(accessToken, tokenSecret, profile, done) {
 
   db.user.findOrCreate({username: profile.username,
-    twitterid: profile.id, accesstoken: accessToken, 
-    tokensecret: tokenSecret}).success(function(user, created) {
-      console.log("user", user);
-      console.log("created", created);
-      done(null, user);
-  })
+  twitterid: profile.id, accesstoken: accessToken, 
+  tokensecret: tokenSecret}).success(function(user, created) {
 
-return 
+    done(null, user);
+  })
 }))
 
-// authenticate twitter credentials
 
+// authenticate twitter credentials
 app.get('/auth/twitter',
 passport.authenticate('twitter'),
 function(req, res){
@@ -87,8 +73,6 @@ passport.authenticate('twitter', { failureRedirect: '/users' }),
 function(req, res) {
   res.redirect('/search');
 });
-
-// get passport started
 
 // prepare our serialize functions
 passport.serializeUser(function(user, done){
@@ -111,27 +95,70 @@ app.get('/', function(req, res) {
   res.render("index", {isAuthenticated: req.isAuthenticated()});
 })
 
+// function for Math.rand which will assist in returning a
+// single, randomized photo from a search query.
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-app.get('/result', function(req, res) {
-  var searchURL ="https://api.flickr.com/services/rest/?format=json&method=flickr.photos.search&tags=" 
-  + req.query.searchTerm + "&api_key=" + process.env.FLICKR_KEY 
-  + "&nojsoncallback=1&media=photos&extras=url_m&page=1&per_page=500&tag_mode=all";
-  console.log(req.query.searchTerm)
-  request(searchURL, function(error, response, body) {
-    if(!error) {
-      console.log(searchURL)
+function imageRequest(dataInput, imageValue)
+
       var bodyData = JSON.parse(body);
-      console.log(bodyData);
-      var data = bodyData.photos.photo;
-      var foundPhoto = data[getRandomInt(0, data.length-1)]
+      var data = bodyData.dataInput;
+      console.log(bodyData)
+
+      // from an array of objects, randomly select one
+      var foundPhoto = data[getRandomInt(0, data.length-1)].imageValue;
       res.render("result", {isAuthenticated: req.isAuthenticated(),
       foundPhoto: foundPhoto})
     }
   })
+}
+
+
+app.get('/result', function(req, res) {
+  if (req.query.searchpic === 'stock') {
+    var searchURL ="https://api.flickr.com/services/rest/?format=json&method=flickr.photos.search&tags=" 
+    + req.query.searchTerm + "&api_key=" + process.env.FLICKR_KEY 
+    + "&nojsoncallback=1&media=photos&extras=url_m&page=1&per_page=500&tag_mode=all";
+
+    console.log(req.query.searchTerm)
+    request(searchURL, function(error, response, body) {
+      if(!error) {
+        imageRequest(photos.photo, url_m)
+        
+      }
+    })
+  } else {
+    var memeURL = "http://version1.api.memegenerator.net/Generators_Search/?q=" + req.query.searchTerm + "&pageSize=24";
+    console.log(req.query.searchTerm)
+    console.log(req.query.searchpic)
+    request(memeURL, function(error, response, body) {
+      if(!error) {
+
+        console.log(memeURL)
+        var bodyData = JSON.parse(body);
+        var data = bodyData.result;
+
+        // from an array of objects, randomly select one
+        var foundPhoto = data[getRandomInt(0, data.length-1)].imageUrl;
+        console.log(foundPhoto)
+        res.render("result", {isAuthenticated: req.isAuthenticated(),
+        foundPhoto: foundPhoto})
+      }
+    })
+  }
 })
+
+// var searchURL ="https://api.twitter.com/1.1/search/tweets.json?q=coffee&result_type=recent&lang=en";
+
+// oauth.get(searchURL, null, null, function(e, data, res) {
+//   // console.log(e);
+//   var tweets = JSON.parse(data).statuses
+//   var tweetText = _.pluck(tweets, "text")
+//   console.log(tweetText);
+//   // console.log(res);
+// })
 
 app.get('/search', function(req, res) {
   res.render("search", {isAuthenticated: req.isAuthenticated()});

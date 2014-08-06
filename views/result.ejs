@@ -6,7 +6,7 @@
     <a href="/logout"><button class="btn btn-primary">Logout</button></a>
     <h4>Welcome</h4>
     <% if ( foundPhoto !== undefined) { %>
-      <img class="foundphoto" src="<%= foundPhoto.url_m %>"></img>
+      <img class="foundphoto" src="<%= foundPhoto %>"></img>
     <% } else {%>
       <h1>Oops! Did not return any results.</h1>
     <% } %>

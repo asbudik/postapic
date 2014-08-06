@@ -32,23 +32,3 @@ module.exports = function(sequelize, DataTypes) {
   });
 return User;
 }
-//   passport.use(new twitterStrategy({
-//    consumerKey: '79D40sYF18Sa1Itv4CaorUMx4',
-//    consumerSecret: 'xKQ0UaikVNUsAHJpSvSgOlkkooBVStuSjM23g6DLPiXabtNVKH',
-//    callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
-//   },
-//   function(token, tokenSecret, profile, done) {
-//     console.log(profile);
-//     console.log(token);
-//     console.log(tokenSecret);
-//     User.findOrCreate({username: profile.username, twitterid: profile.id,
-//       accesstoken: token, tokensecret: tokenSecret}, function(err, user) {
-//       if (err) { 
-//         return done(err); 
-//       }
-//       done(null, profile);
-//     });
-//   }
-// ));
-//   return User;
-// }
