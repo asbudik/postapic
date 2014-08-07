@@ -130,7 +130,8 @@ app.get('/result', function(req, res) {
           var foundPhoto = randomPhoto.url_m
         }
         res.render("result", {isAuthenticated: req.isAuthenticated(),
-        foundPhoto: foundPhoto, photoId: photoId, user: req.user})
+        foundPhoto: foundPhoto, photoId: photoId, user: req.user,
+        searchpic: req.query.searchpic, searchTerm: req.query.searchTerm})
       }
     })
   } else {
@@ -226,6 +227,13 @@ app.get('/users', function(req, res) {
     users: allUsers, user: req.user});
   });
 });
+
+app.get('/find/users', function(req, res) {
+  db.user.findAll({where: ["username like ?", '%' + req.query.username + '%']}).success(function(allUsers) {
+    res.render('users', { isAuthenticated: req.isAuthenticated(),
+      users: allUsers, user: req.user})
+  })
+})
 
 
 app.get('/logout', function(req,res){

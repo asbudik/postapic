@@ -1,25 +1,25 @@
 <% include ./partials/header.ejs %> 
 
-    <h4 class="user">Welcome</h4>
-    <h1 class="title">Search</h1>
-    <form action="/search" method = "post">
+    <h1 class="userheader">All Users</h1>
+    <form action="/find/users">
 
       <p>
-        <label for="user"> </label> <input type="text" name="username" id="user" autofocus>
+        <label for="user"> </label> <input type="text" name="username" id="user" class="tweetstatus findpic searchname" placeholder="search for users">
       </p>
       <p>
-        <button class ="btn btn-primary">Search</button>
+        <button class ="btn btn-primary searchbutton">Go forth and socialize</button>
       </p>
     </form>
-
-    <h1>All Users</h1>
     <ul>
+
       <% users.forEach(function(user) { %>
         <span class="clearfix col-sm-4"><li><a href="/users/<%= user.id %>"> <%= user.username %></a></li></span>
       <% }) %>
-      <% for (i = 0; i < 97; i++) { %>
-        <span class="clearfix col-sm-4">username<%= i %></span>
-      <% } %>
+
+        <% for (i = 0; i < 97; i++) { %>
+          <a href="#"><span class="clearfix col-sm-4">username<%= i %></span></a>
+        <% } %>
+
     </ul>
 </div>
 <% include ./partials/footer.ejs %> 

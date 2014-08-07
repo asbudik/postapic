@@ -1,14 +1,13 @@
 <% include ./partials/header.ejs %> 
   
-    <h4 class="user">Welcome</h4>
     <h1 class="title"> Find a pic</h1>
 
     <form id="send_message" action="/result">
-      <input type="text" name="searchTerm" id="message"><br>
+      <input type="text" name="searchTerm" id="message" class="tweetstatus findpic" placeholder="search a pic"><br>
 
       <input type="radio" name="searchpic" id="check" value="stock" autofocus>images</input>
       <input type="radio" name="searchpic" id="check"value="meme">memes</input></br>
-      <button class="btn btn-primary">Search</button>
+      <button class="btn btn-primary searchbutton">Check it out!</button>
     </form>
 
      <script>
