@@ -156,7 +156,7 @@ app.post('/users/:id', function(req, res) {
   picStream = fs.createWriteStream(photoPath);
   picStream.on("close", function() {
     twitter.statuses("update_with_media", {
-      status: "#PostaPic33282",
+      status: "#PostaPic",
       media: [photoPath]
     },
     req.user.accesstoken,
@@ -172,29 +172,30 @@ app.post('/users/:id', function(req, res) {
       console.log("embedURL", embedURL);
       console.log("data", data)
 
-      oauth.get(embedURL, null, null, function(e, d, res) {
+      oauth.get(embedURL, null, null, function(e, d, twitter_res) {
         var tweets = JSON.parse(d)
         console.log(tweets)
         db.user.find(req.user.id).success(function(foundUser) {
-          console.log(req.user.id)
-          console.log(foundUser)
-          db.picture.create({url: data.id_str}).success(function(newPicture) {
-            foundUser.addPicture(newPicture).success(function(){})
+          db.picture.create({url: data.id_str, html: tweets.html}).success(function(newPicture) {
+            foundUser.addPicture(newPicture).success(function(){
+                res.redirect('/users/' + req.user.id);
+            })
           })
         })
       })
     })
   })
   request.get(req.body.photo).pipe(picStream);
-  res.render('show', {isAuthenticated: req.isAuthenticated(),
-  user: req.user, picture: req.picture});
+
 })
 
 
 app.get('/users/:id', function(req, res) {
   db.user.find(req.params.id).success(function(foundUser) {
-    res.render("show", {isAuthenticated: req.isAuthenticated(),
-    user: foundUser, picture: req.picture});
+    db.picture.findAll({order: [['createdAt', 'DESC']]}).success(function(allPictures) {
+      res.render("show", {isAuthenticated: req.isAuthenticated(),
+      user: foundUser, picture: allPictures});
+    })
   })
 })
 

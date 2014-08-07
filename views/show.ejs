@@ -4,9 +4,12 @@
   <% } else { %>
   <div class="center">
     <a class="log" href="/logout"><button class="btn btn-primary">Logout</button></a>
-    <h4 class="user">Welcome</h4>
+  <h4 class="user">Welcome</h4>
 
-   <h1 class="title"><%= user.username %></h1>
- <% } %>
+  <h1 class="title"><%= user.username %></h1>
+  <% picture.forEach(function(pic) { %>
+    <%- pic.html %>
+   <% }) %>
+  <% } %>
 </div>
 <% include ./partials/footer.ejs %> 

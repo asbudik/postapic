@@ -3,6 +3,7 @@ function Picture(sequelize, DataTypes){
 
   var Picture = sequelize.define('picture', {
     url: DataTypes.STRING,
+    html: DataTypes.TEXT
   },
     {
       classMethods: {
