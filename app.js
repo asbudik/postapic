@@ -156,7 +156,7 @@ app.post('/users/:id', function(req, res) {
   picStream = fs.createWriteStream(photoPath);
   picStream.on("close", function() {
     twitter.statuses("update_with_media", {
-      status: "#PostaPic",
+      status: req.body.status || "",
       media: [photoPath]
     },
     req.user.accesstoken,
@@ -192,7 +192,7 @@ app.post('/users/:id', function(req, res) {
 
 app.get('/users/:id', function(req, res) {
   db.user.find(req.params.id).success(function(foundUser) {
-    db.picture.findAll({order: [['createdAt', 'DESC']]}).success(function(allPictures) {
+    foundUser.getPictures({order: [['createdAt', 'DESC']]}).success(function(allPictures) {
       res.render("show", {isAuthenticated: req.isAuthenticated(),
       user: foundUser, picture: allPictures});
     })

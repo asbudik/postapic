@@ -2,6 +2,9 @@
 <div class="center">
 <% if (!isAuthenticated ) {%>
   <a class="log" href="/auth/twitter"><button class="btn btn-primary">Sign in with Twitter</button></a>
+  <% } else { %>
+  <a class="log" href="/logout"><button class="btn btn-primary">Logout</button></a>
+  <% } %>
   <h1 class="title">Welcome to Post-a-Pic</h1>
   <p><strong>Post-a-Pic</strong> makes life easy on Twitter. No more Google searching, saving images, finding
   the image you <strong>just</strong> saved, just to upload it. Post-a-Pic is a quick two step process!</p>
@@ -10,18 +13,5 @@
   <p><h5>It's that easy. Go check it out!</h5></p>
   <p><h5>Go wild</h5> with the newest image finder to hit the net. Quickly find those nifty images in a
     pinch and keep your Twitter experience simple.</p>
-<% } else { %>
-  <a class="log" href="/logout"><button class="btn btn-primary">Logout</button></a>
-  <h4 class="user">Welcome</h4>
-
-  <h1 class="title">Welcome to Post-a-Pic</h1>
-  <p><strong>Post-a-Pic</strong> makes life easy on Twitter. No more Google searching, saving images, finding
-  the image you <strong>just</strong> saved, just to upload it. Post-a-Pic is a quick two step process!</p>
-  <p><h6>Search for an image</h6></p>
-  <p><h6>Upload your image to Twitter!</h6></p>
-  <p><h5>It's that easy. Go check it out!</h5></p>
-  <p><strong>Go wild</strong> with the newest image finder to hit the net. Quickly find those nifty images in a
-    pinch and keep your Twitter experience simple.</p>
-<% } %>
 </div>
 <% include ./partials/footer.ejs %> 
