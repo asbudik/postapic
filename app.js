@@ -123,7 +123,7 @@ app.get('/result', function(req, res) {
         var foundPhoto = data[getRandomInt(0, data.length-1)];
         var photoId = foundPhoto.id;
         res.render("result", {isAuthenticated: req.isAuthenticated(),
-        foundPhoto: foundPhoto.url_m, photoId: photoId})
+        foundPhoto: foundPhoto.url_m, photoId: photoId, user: req.user})
       }
     })
   } else {
@@ -136,14 +136,14 @@ app.get('/result', function(req, res) {
         var foundPhoto = data[getRandomInt(0, data.length-1)];
         var photoId = foundPhoto.generatorID;
         res.render("result", {isAuthenticated: req.isAuthenticated(),
-        foundPhoto: foundPhoto.imageUrl, photoId: photoId})
+        foundPhoto: foundPhoto.imageUrl, photoId: photoId, user: req.user})
       }
     })
   }
 })
 
 
-app.post('/show', function(req, res) {
+app.post('/users/:id', function(req, res) {
   var twitter = new twitterAPI({
     consumerKey: process.env.TWITTER_KEY,
     consumerSecret: process.env.TWITTER_SECRET,
@@ -176,6 +176,8 @@ app.post('/show', function(req, res) {
         var tweets = JSON.parse(d)
         console.log(tweets)
         db.user.find(req.user.id).success(function(foundUser) {
+          console.log(req.user.id)
+          console.log(foundUser)
           db.picture.create({url: data.id_str}).success(function(newPicture) {
             foundUser.addPicture(newPicture).success(function(){})
           })
@@ -185,14 +187,14 @@ app.post('/show', function(req, res) {
   })
   request.get(req.body.photo).pipe(picStream);
   res.render('show', {isAuthenticated: req.isAuthenticated(),
-  user: req.user});
+  user: req.user, picture: req.picture});
 })
 
 
-app.get('/show/:id', function(req, res) {
+app.get('/users/:id', function(req, res) {
   db.user.find(req.params.id).success(function(foundUser) {
     res.render("show", {isAuthenticated: req.isAuthenticated(),
-    user: foundUser});
+    user: foundUser, picture: req.picture});
   })
 })
 
@@ -204,10 +206,7 @@ app.get('/search', function(req, res) {
   res.render("search", {isAuthenticated: req.isAuthenticated()});
 });
 
-app.get('/show', function(req, res) {
-  res.render('show', {isAuthenticated: req.isAuthenticated(),
-  user: req.user, picture: req.picture })
-})
+
 app.get('/users', function(req, res) {
   db.user.findAll({order: [['createdAt', 'DESC']]}).success(function(allUsers) {
     res.render('users', { isAuthenticated: req.isAuthenticated(),

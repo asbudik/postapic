@@ -8,7 +8,7 @@
     <h4 class="user">Welcome</h4>
     <h1 class="title">Your pic</h1>
     <% if ( foundPhoto !== undefined) { %>
-    <form method="post" action="/show">
+    <form method="post" action="/users/<%= user.id %>">
       <input type="hidden" name="photo" value="<%= foundPhoto %>">
       <input type="hidden" name="photoID" value="<%= photoId %>">
       <button id="tweet" class="btn btn-primary">Tweet it!</button>
