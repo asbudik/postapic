@@ -1,5 +1,5 @@
 <% include ./partials/header.ejs %> 
-
+<div class="center">
 <% if (!isAuthenticated) { %>
   <a class="log" href="/auth/twitter"><button class="btn btn-primary">Sign in with Twitter</button></a>
 <% } else { %>
@@ -7,5 +7,5 @@
 <% } %>
 <h1 class="title">Error</h1>
 <h3>Oops! That page doesn't exist!</h3>
-
+</div>
 <% include ./partials/footer.ejs %> 

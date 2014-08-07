@@ -152,14 +152,12 @@ app.post('/show', function(req, res) {
   // path where to save image
   var photoPath = './photos/' + req.body.photoID;
   // create write stream to write image to path
-  request.get(req.body.photo).pipe(fs.createWriteStream(photoPath));
-  // var mediaThing = fs.createReadStream(photoPath);
-  // var mediaThing = fs.createReadStream("./photos/" + req.body.photoID);
 
-
-  twitter.statuses("update_with_media", {
-    status: "#PostaPic33282",
-    media: [photoPath]
+  picStream = fs.createWriteStream(photoPath);
+  picStream.on("close", function() {
+    twitter.statuses("update_with_media", {
+      status: "#PostaPic33282",
+      media: [photoPath]
     },
     req.user.accesstoken,
     req.user.tokensecret,
@@ -168,20 +166,27 @@ app.post('/show', function(req, res) {
       if (error) {
         console.log("error", error)
       }
-      console.log(data)
 
-      var dummyURL = 'https://api.twitter.com/1/statuses/oembed.json?id=133640144317198338'
-      var embedURL = 'https://api.twitter.com/1/statuses/oembed.json?id=' + data.id;
+      // var dummyURL = 'https://api.twitter.com/1/statuses/oembed.json?id=133640144317198338'
+      var embedURL = 'https://api.twitter.com/1/statuses/oembed.json?id=' + data.id_str;
+      console.log("embedURL", embedURL);
+      console.log("data", data)
 
-      oauth.get(dummyURL, null, null, function(e, d, res) {
-        console.log(dummyURL)
+      oauth.get(embedURL, null, null, function(e, d, res) {
         var tweets = JSON.parse(d)
         console.log(tweets)
+        db.user.find(req.user.id).success(function(foundUser) {
+          db.picture.create({url: data.id_str}).success(function(newPicture) {
+            foundUser.addPicture(newPicture).success(function(){})
+          })
+        })
       })
     })
-    res.render('show', {isAuthenticated: req.isAuthenticated(),
-    user: req.user});
   })
+  request.get(req.body.photo).pipe(picStream);
+  res.render('show', {isAuthenticated: req.isAuthenticated(),
+  user: req.user});
+})
 
 
 app.get('/show/:id', function(req, res) {
@@ -200,7 +205,8 @@ app.get('/search', function(req, res) {
 });
 
 app.get('/show', function(req, res) {
-  res.render('show', {isAuthenticated: req.isAuthenticated()})
+  res.render('show', {isAuthenticated: req.isAuthenticated(),
+  user: req.user, picture: req.picture })
 })
 app.get('/users', function(req, res) {
   db.user.findAll({order: [['createdAt', 'DESC']]}).success(function(allUsers) {
