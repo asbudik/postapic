@@ -12,7 +12,7 @@ var express = require("express"),
   methodOverride = require('method-override'),
   morgan = require('morgan'),
   _ = require('lodash'),
-  oauth = require('oauth'),
+  OAuth = require('oauth'),
   fs = require('fs'),
   app = express();
 
@@ -37,9 +37,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-// Post with Twitter
+// Get embed tweets with Twitter
 
-
+var oauth = new OAuth.OAuth(
+  'https://api.twitter.com/oauth/request_token',
+  'https://api.twitter.com/oauth/access_token',
+  process.env.TWITTER_KEY,
+  process.env.TWITTER_SECRET,
+  '1.0A',
+  null,
+  'HMAC-SHA1'
+);
 
 // Login with Twitter
 passport.use(new twitterStrategy ({
@@ -135,6 +143,54 @@ app.get('/result', function(req, res) {
 })
 
 
+app.post('/show', function(req, res) {
+  var twitter = new twitterAPI({
+    consumerKey: process.env.TWITTER_KEY,
+    consumerSecret: process.env.TWITTER_SECRET,
+    callback: 'http://127.0.0.1:3000/auth/twitter/callback'
+  });
+  // path where to save image
+  var photoPath = './photos/' + req.body.photoID;
+  // create write stream to write image to path
+  request.get(req.body.photo).pipe(fs.createWriteStream(photoPath));
+  // var mediaThing = fs.createReadStream(photoPath);
+  // var mediaThing = fs.createReadStream("./photos/" + req.body.photoID);
+
+
+  twitter.statuses("update_with_media", {
+    status: "#PostaPic33282",
+    media: [photoPath]
+    },
+    req.user.accesstoken,
+    req.user.tokensecret,
+
+    function(error, data, response) {
+      if (error) {
+        console.log("error", error)
+      }
+      console.log(data)
+
+      var dummyURL = 'https://api.twitter.com/1/statuses/oembed.json?id=133640144317198338'
+      var embedURL = 'https://api.twitter.com/1/statuses/oembed.json?id=' + data.id;
+
+      oauth.get(dummyURL, null, null, function(e, d, res) {
+        console.log(dummyURL)
+        var tweets = JSON.parse(d)
+        console.log(tweets)
+      })
+    })
+    res.render('show', {isAuthenticated: req.isAuthenticated(),
+    user: req.user});
+  })
+
+
+app.get('/show/:id', function(req, res) {
+  db.user.find(req.params.id).success(function(foundUser) {
+    res.render("show", {isAuthenticated: req.isAuthenticated(),
+    user: foundUser});
+  })
+})
+
 app.get('/', function(req, res) {
   res.render("index", {isAuthenticated: req.isAuthenticated()});
 });
@@ -152,38 +208,6 @@ app.get('/users', function(req, res) {
     users: allUsers});
   });
 });
-
-
-app.post('/show', function(req, res) {
-  var twitter = new twitterAPI({
-    consumerKey: process.env.TWITTER_KEY,
-    consumerSecret: process.env.TWITTER_SECRET,
-    callback: 'http://127.0.0.1:3000/auth/twitter/callback'
-  });
-  
-  var photoPath = './photos/' + req.body.photoID;
-
-  request.get(req.body.photo).pipe(fs.createWriteStream(photoPath));
-
-  twitter.statuses("update_with_media", {
-    status: "#PostaPic",
-    media: [photoPath]
-    },
-    req.user.accesstoken,
-    req.user.tokensecret,
-    function(error, data, response) {
-      if (error) {
-        console.log("error", error)
-          console.log(req.body.photo)
-          console.log(req.body.photoID)
-      } else {
-        console.log("photo id colon:", req.body.photoID)
-        console.log("photo url colon:", req.body.photo)
-      }
-    }
-  );
-  res.redirect('show');
-})
 
 
 app.get('/logout', function(req,res){

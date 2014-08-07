@@ -1,16 +1,17 @@
 <% include ./partials/header.ejs %> 
   <% if (!isAuthenticated) {%>
-    <a href="/auth/twitter">Sign in with Twitter</a>
+    <a class="log" href="/auth/twitter"><button class="btn btn-primary">Sign in with Twitter</button></a>
   <% } else { %>
-    <a href="/logout"><button class="btn btn-primary">Logout</button></a>
-    <h4>Welcome</h4>
-    <h1> Find a pic</h1>
+    <a class="log" href="/logout"><button class="btn btn-primary">Logout</button></a>
+    <h4 class="user">Welcome</h4>
+    <h1 class="title"> Find a pic</h1>
 
     <form id="send_message" action="/result">
+      <input type="text" name="searchTerm" id="message"><br>
+
       <input type="radio" name="searchpic" id="check" value="stock" autofocus>stock image</input>
-      <input type="radio" name="searchpic" id="check"value="meme">memes</input>
-      <input type="text" name="searchTerm" id="message">
-      <input type="submit" id="submit">
+      <input type="radio" name="searchpic" id="check"value="meme">memes</input></br>
+      <button class="btn btn-primary">Search</button>
     </form>
 
      <script>

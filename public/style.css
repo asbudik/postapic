@@ -7,3 +7,27 @@ body {
   position: relative;
   top: 15px;
 }
+
+#tweet {
+  top: 40px;
+  width: 200px;
+  background-image: url("./Twitterbird.png");
+  background-repeat: no-repeat;
+  background-position: left;
+}
+
+.radio {
+  padding: 5px;
+}
+
+.log {
+  float: right;
+  top: 0px;
+}
+
+.name {
+  font-size: 66px;
+  letter-spacing: -2px;
+  position: relative;
+  top: -40px;
+}

@@ -1,20 +1,35 @@
+
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<html>
+<head>
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+  <title>Post-a-Pic</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="/style.css">
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <meta charset="UTF-8">
-
-    <title>Grab-a-Pic</title>
-  </head>
-  <body>
+</head>
+<style>
+  body {
+    padding-top: 70px;
+  }
+</style>
+<body>
+  <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
     <div class="container">
-    <h1>Grab-a-Pic</h1>
-    <a href="/">Home</a>
-    <a href="/search">Find a pic</a>
-    <a href="/users">Search a user</a>
+      <div class="navbar-header">
+        <button class="navbar-toggle" data-toggle="collapse" data-target="navbar-collapse">
+        </button>
+        <a class="navbar-brand" href="/">Post-a-Pic</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="/">Home</a></li>
+          <li><a href="/search">Find a pic</a></li>
+          <li><a href="/users">Search a user</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+      <h1 class="name">Post a Pic</h1>
