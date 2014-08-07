@@ -2,12 +2,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
   <title>Post-a-Pic</title>
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="/style.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 <style>
   body {
@@ -20,9 +22,16 @@
       <div class="navbar-header">
         <button class="navbar-toggle" data-toggle="collapse" data-target="navbar-collapse">
         </button>
-        <a class="navbar-brand" href="/">Post-a-Pic</a>
+        <a class="navbar-brand active" href="/">Post-a-Pic</a>
       </div>
       <div class="collapse navbar-collapse">
+        <% if (isAuthenticated !== undefined) { %>
+          <% if (!isAuthenticated) {%>
+            <li class="logout"><a class="logout" href="/auth/twitter">Sign In</a></li>
+          <% } else { %>
+            <li class="log"><span class="username"> Hello, <%=user.username%></span> <a class="log hover" href="/logout">Logout</a></li>
+          <% } %>
+        <% } %>
         <ul class="nav navbar-nav">
           <li><a href="/">Home</a></li>
           <li><a href="/users">Search a user</a></li>
@@ -33,4 +42,5 @@
     </div>
   </nav>
   <div class="container">
-      <h1 class="name center">Post-a-Pic</h1>
+    <div class="center">
+    <h1 class="name center">Post-a-Pic</h1>

@@ -108,6 +108,10 @@ function getRandomInt(min, max) {
 
 // grab photo id for unique downloads
 
+// I am calling from two potential APIs here and I wasn't 
+// sure how to refactor this get request. Each request has
+// properties specific to one another, and I couldn't pass
+// those properties through a generic function.
 
 app.get('/result', function(req, res) {
   if (req.query.searchpic === 'stock') {
@@ -117,13 +121,16 @@ app.get('/result', function(req, res) {
 
     request(searchURL, function(error, response, body) {
       if(!error) {
-
+        
         var bodyData = JSON.parse(body);
         var data = bodyData.photos.photo;
-        var foundPhoto = data[getRandomInt(0, data.length-1)];
-        var photoId = foundPhoto.id;
+        if (data[0] !== undefined) {
+          var randomPhoto = data[getRandomInt(0, data.length-1)];
+          var photoId = randomPhoto.id;
+          var foundPhoto = randomPhoto.url_m
+        }
         res.render("result", {isAuthenticated: req.isAuthenticated(),
-        foundPhoto: foundPhoto.url_m, photoId: photoId, user: req.user})
+        foundPhoto: foundPhoto, photoId: photoId, user: req.user})
       }
     })
   } else {
@@ -133,10 +140,13 @@ app.get('/result', function(req, res) {
 
         var bodyData = JSON.parse(body);
         var data = bodyData.result;
-        var foundPhoto = data[getRandomInt(0, data.length-1)];
-        var photoId = foundPhoto.generatorID;
+        if (data[0] !== undefined) {
+          var randomPhoto = data[getRandomInt(0, data.length-1)];
+          var photoId = randomPhoto.generatorID;
+          var foundPhoto = randomPhoto.imageUrl;
+        }
         res.render("result", {isAuthenticated: req.isAuthenticated(),
-        foundPhoto: foundPhoto.imageUrl, photoId: photoId, user: req.user})
+        foundPhoto: foundPhoto, photoId: photoId, user: req.user})
       }
     })
   }
@@ -168,7 +178,7 @@ app.post('/users/:id', function(req, res) {
       }
 
       // var dummyURL = 'https://api.twitter.com/1/statuses/oembed.json?id=133640144317198338'
-      var embedURL = 'https://api.twitter.com/1/statuses/oembed.json?id=' + data.id_str;
+      var embedURL = 'https://api.twitter.com/1/statuses/oembed.json?id=' + data.id_str + "&omit_script=true";
       console.log("embedURL", embedURL);
       console.log("data", data)
 
@@ -200,18 +210,20 @@ app.get('/users/:id', function(req, res) {
 })
 
 app.get('/', function(req, res) {
-  res.render("index", {isAuthenticated: req.isAuthenticated()});
+  res.render("index", {isAuthenticated: req.isAuthenticated(),
+    user: req.user});
 });
 
 app.get('/search', function(req, res) {
-  res.render("search", {isAuthenticated: req.isAuthenticated()});
+  res.render("search", {isAuthenticated: req.isAuthenticated(),
+    user: req.user});
 });
 
 
 app.get('/users', function(req, res) {
   db.user.findAll({order: [['createdAt', 'DESC']]}).success(function(allUsers) {
     res.render('users', { isAuthenticated: req.isAuthenticated(),
-    users: allUsers});
+    users: allUsers, user: req.user});
   });
 });
 
@@ -222,7 +234,8 @@ app.get('/logout', function(req,res){
 });
 
 app.get('*', function(req, res) {
-  res.render("error", { isAuthenticated: req.isAuthenticated()});
+  res.render("error", { isAuthenticated: req.isAuthenticated(),
+    user: req.user});
 });
 
 
