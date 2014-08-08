@@ -10,6 +10,7 @@ body {
   padding: -10px;
   position: relative;
   left: 3px;
+  z-index: 20;
 }
 
 .logoutbutton {
@@ -28,6 +29,7 @@ body {
   position: relative;
   top: 5px;
   left: 100px;
+  z-index: 20;
 }
 .widget {
   height: 700px;
@@ -170,8 +172,6 @@ nav, .navbar {
   line-height: 25px;
 }
 .heart {
-  width: 50%;
-  height: 50%;
   margin-top: 30px;
 }
 .log {
