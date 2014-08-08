@@ -167,7 +167,7 @@ app.post('/users/:id', function(req, res) {
   picStream = fs.createWriteStream(photoPath);
   picStream.on("close", function() {
     twitter.statuses("update_with_media", {
-      status: req.body.status || "",
+      status: req.body.status + " #PostaPicRocks",
       media: [photoPath]
     },
     req.user.accesstoken,
