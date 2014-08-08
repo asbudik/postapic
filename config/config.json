@@ -11,10 +11,10 @@
   },
   "production": {
     "dialect": "postgres",
-    "username": "lzmxjitdmnqoed",
-    "password": "t9u9qUdmgJiUwyDeBlfprDeZ2y",
-    "host": "ec2-184-72-238-68.compute-1.amazonaws.com",
+    "username": "dtutiyxibxwyqi",
+    "password": "jpD6W3qbj7coFAV0rYvdZrN9jA",
+    "host": "ec2-54-83-43-49.compute-1.amazonaws.com",
     "port": "5432",
-    "database": "daqfumcde4u33j"
+    "database": "d5ucq0jsotvvc0"
   }
 }
