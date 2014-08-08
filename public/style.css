@@ -93,7 +93,7 @@ body {
   font-size: 66px;
   letter-spacing: -2px;
   position: relative;
-  top: -40px;
+  top: -190px;
 }
 
 .signin {
@@ -115,15 +115,29 @@ body {
 ul {
   list-style-type: none;
 }
-
+.center {
+  margin-top: 0px;
+}
 .col-md-4 {
   margin-top: 20px;
 }
-
+nav, .navbar {
+  margin: 0px;
+}
 .container-fluid {
-  margin: 20px;
+  background-color: #e5f2fb;
+  height: 250px;
+  border-bottom: solid 30px #2A2A2A;
+  background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
+.clearfix {
+  letter-spacing: .5px;
+  line-height: 25px;
+}
 .log {
   font-family: "Helvetica", sans-serif;
   float: right;
@@ -152,4 +166,9 @@ ul {
   position: relative;
   top: 18px;
   left: -130px;
+}
+.footer {
+  height: 100px;
+  position: relative;
+  bottom: 0px;
 }

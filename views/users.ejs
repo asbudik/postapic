@@ -13,11 +13,11 @@
     <ul>
 
       <% users.forEach(function(user) { %>
-        <span class="clearfix col-sm-4"><li><a href="/users/<%= user.id %>"> <%= user.username %></a></li></span>
+        <span class="clearfix col-sm-4"><li><a href="/users/<%= user.id %>"> <strong><%= user.username %></strong></a></li></span>
       <% }) %>
 
         <% for (i = 0; i < 97; i++) { %>
-          <a href="#"><span class="clearfix col-sm-4">username<%= i %></span></a>
+          <a href="#"><span class="clearfix col-sm-4"><strong>username<%= i %></strong></span></a>
         <% } %>
 
     </ul>
