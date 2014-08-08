@@ -1,7 +1,7 @@
 <% include ./partials/header.ejs %> 
-
-  <div class="centertweets">
-    <h1 class="title"><%= user.username %></h1>
+<h2 class="title"><%= user.username %></h2>
+    
+    <div class="centertweets">
     <div class="tweetcontainer">
     <% for (i = 0; i < 4; i++) { %>
       <% if (picture[i] !== undefined) { %>

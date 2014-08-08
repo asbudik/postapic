@@ -2,10 +2,14 @@ body {
   position: relative;
   top: 50px;
   letter-spacing: -.5px;
+  width: 100%;
+  min-width: 1368px;
 }
 .signing {
   width: 200px;
   padding: -10px;
+  position: relative;
+  left: 3px;
 }
 
 .logoutbutton {
@@ -25,7 +29,13 @@ body {
   top: 5px;
   left: 100px;
 }
-
+.widget {
+  height: 700px;
+  width: 250px;
+  float: right;
+  position: relative;
+  right: 2px;
+}
 .logoutbutton:hover {
   background-color: #00CCFF;
   background: -webkit-linear-gradient(#3366CC, #00FFFF); /* For Safari 5.1 to 6.0 */
@@ -98,7 +108,7 @@ body {
   font-size: 80px;
   letter-spacing: -2px;
   position: relative;
-  top: -160px;
+  top: -210px;
   color: white;
   background-color: rgba(0, 0, 0, .3);
   padding: 20px 0px;
@@ -175,21 +185,17 @@ nav, .navbar {
   letter-spacing: .4px;
   list-style-type: none;
 }
-.widget {
-  height: 700px;
-  width: 250px;
-  position: relative;
-  right: 10px;
-  float: right;
-}
 .twitter-timeline {
   margin-bottom: 20px;
   position: relative;
   top: 110px;
+  right: 10px;
+  z-index: 10;
 }
 .tweetcontainer {
   width: 1000px;
   min-width: 1000px;
+  z-index: 10;
 }
 .logout {
   font-family: "Helvetica", sans-serif;
@@ -201,6 +207,37 @@ nav, .navbar {
   font-size: 14px;
   letter-spacing: .4px;
   list-style-type: none;
+}
+.doit, .doit2 {
+  padding: 3px;
+  border: dotted 1px grey;
+}
+.doit2 {
+  padding: 0px 18px;
+}
+.get {
+  font-family: 'Montserrat', sans-serif;
+
+  width: 240px;
+  font-size: 30px;
+  letter-spacing: -1px;
+  background-color: #00e5e5;
+  background: -webkit-linear-gradient(#99ffff, #00e5e5); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#99ffff, #00e5e5); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#99ffff, #00e5e5); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#99ffff, #00e5e5);
+  color: white;
+  text-shadow: 1px 1px #007f7f;
+  box-shadow: .5px .5px 2px black;
+}
+
+.get:hover {
+  background: -webkit-linear-gradient(#ccffff, #00ffff); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#ccffff, #00ffff); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#ccffff, #00ffff); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#ccffff, #00ffff);
+  letter-spacing: 0px;
+  color: white;
 }
 
 .username {

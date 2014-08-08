@@ -53,14 +53,14 @@ var oauth = new OAuth.OAuth(
 passport.use(new twitterStrategy ({
   consumerKey: process.env.TWITTER_KEY,
   consumerSecret: process.env.TWITTER_SECRET,
-  callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
+  callbackURL: process.env.HOST || "http://127.0.0.1:3000/auth/twitter/callback"
 },
 function(accessToken, tokenSecret, profile, done) {
 
   db.user.findOrCreate({username: profile.username,
   twitterid: profile.id, accesstoken: accessToken, 
   tokensecret: tokenSecret }).success(function(user, created) {
-    console.log(profile.photos[0].value)
+    console.log(profile)
     done(null, user);
   })
 }))
@@ -159,7 +159,7 @@ app.post('/users/:id', function(req, res) {
   var twitter = new twitterAPI({
     consumerKey: process.env.TWITTER_KEY,
     consumerSecret: process.env.TWITTER_SECRET,
-    callback: 'http://127.0.0.1:3000/auth/twitter/callback'
+    callback: process.env.HOST || 'http://127.0.0.1:3000/auth/twitter/callback'
   });
   // path where to save image
   var photoPath = './photos/' + req.body.photoID;
@@ -217,6 +217,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/search', function(req, res) {
+
   res.render("search", {isAuthenticated: req.isAuthenticated(),
     user: req.user});
 });
