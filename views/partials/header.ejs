@@ -16,12 +16,12 @@
   <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
-        <button class="navbar-toggle" data-toggle="collapse" data-target="navbar-collapse">
+        <!-- <button class="navbar-toggle" data-toggle="collapse" data-target="navbar-collapse"> -->
         </button>
         <a class="navbar-brand active" href="/">Post-a-Pic</a>
       </div>
-      <div class="collapse navbar-collapse">
-        <% if (isAuthenticated !== undefined) { %>
+<!--       <div class="collapse navbar-collapse">
+ -->        <% if (isAuthenticated !== undefined) { %>
           <% if (!isAuthenticated) {%>
 
             <li class="logout"><a href="/auth/twitter"><img class="signing" src="/connect-with-twitter.png"></a></li>
@@ -36,8 +36,8 @@
           <li><a href="/search">Find a pic</a></li>
 
         </ul>
-      </div>
-    </div>
+<!--       </div>
+ -->    </div>
   </nav>
   <div class="center">
     <div class="container-fluid bgpic">
