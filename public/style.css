@@ -188,6 +188,8 @@ nav, .navbar {
   position: relative;
   top: 18px;
   left: -130px;
+  padding-right: 23px;
+  z-index: 20;
 }
 .containerfooter {
   height: 70px;
