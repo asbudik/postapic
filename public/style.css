@@ -110,7 +110,7 @@ body {
   height: 100%;
   margin: 0 auto;
   text-align: center;
-  margin-bottom: 70px;
+  margin-bottom: -50px;
 }
 ul {
   list-style-type: none;
@@ -167,8 +167,13 @@ nav, .navbar {
   top: 18px;
   left: -130px;
 }
-.footer {
-  height: 100px;
-  position: relative;
-  bottom: 0px;
+.containerfooter {
+  height: 70px;
+  position: fixed;
 }
+
+.foundphoto {
+  padding: 10px;
+  border: dotted 1px grey;
+}
+

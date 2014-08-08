@@ -1,6 +1,7 @@
 <% include ./partials/header.ejs %> 
   
-    <h1 class="title"> Find a pic</h1>
+    <% if (isAuthenticated) { %>
+     <h1 class="title"> Find a pic</h1>
 
     <form id="send_message" action="/result">
       <input type="text" name="searchTerm" id="message" class="tweetstatus findpic" placeholder="search a pic"><br>
@@ -9,7 +10,9 @@
       <input type="radio" name="searchpic" id="check"value="meme">memes</input></br>
       <button class="btn btn-primary searchbutton">Check it out!</button>
     </form>
-
+    <% } else { %>
+      <h3>Please sign in to search photos!</h3>
+    <% } %>
      <script>
       $(function() {
         var $radios = $('input:radio[name=searchpic]');

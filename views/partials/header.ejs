@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="/style.css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-</head>
-<body>
+  </head>
+  <body>
   <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
@@ -22,6 +22,7 @@
       <div class="collapse navbar-collapse">
         <% if (isAuthenticated !== undefined) { %>
           <% if (!isAuthenticated) {%>
+
             <li class="logout"><a href="/auth/twitter"><img class="signing" src="/connect-with-twitter.png"></a></li>
           <% } else { %>
             <li class="log"><span class="username"> Hello, <%=user.username%></span> 
