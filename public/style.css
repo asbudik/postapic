@@ -25,7 +25,11 @@ body {
   top: 5px;
   left: 100px;
 }
-
+.widget {
+  height: 700px;
+  width: 250px;
+  float: right;
+}
 .logoutbutton:hover {
   background-color: #00CCFF;
   background: -webkit-linear-gradient(#3366CC, #00FFFF); /* For Safari 5.1 to 6.0 */
@@ -90,10 +94,16 @@ body {
 }
 
 .name {
-  font-size: 66px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 80px;
   letter-spacing: -2px;
   position: relative;
-  top: -190px;
+  top: -210px;
+  color: white;
+  background-color: rgba(0, 0, 0, .3);
+  padding: 20px 0px;
+  width: 500px;
+  text-shadow: 4px 4px black;
 }
 
 .signin {
@@ -106,7 +116,7 @@ body {
   background-position: left -10px center;
 }
 .center {
-  width: 100%;
+ 
   height: 100%;
   margin: 0 auto;
   text-align: center;
@@ -124,16 +134,19 @@ ul {
 nav, .navbar {
   margin: 0px;
 }
+.bgpic {
+  top: -200px;
+}
 .container-fluid {
+  background-image: url('/tumblr6.jpg');
   background-color: #e5f2fb;
   height: 250px;
   border-bottom: solid 30px #2A2A2A;
-  background-position: center center;
+  background-position: top;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-size: cover;
+    padding: 0px;
 }
-
 .clearfix {
   letter-spacing: .5px;
   line-height: 25px;
@@ -150,9 +163,14 @@ nav, .navbar {
   list-style-type: none;
 }
 .twitter-timeline {
-  float: right;
+  margin-bottom: 20px;
   position: relative;
-  top: 100px;
+  top: 110px;
+  right: 10px;
+}
+.tweetcontainer {
+  width: 1000px;
+  min-width: 1000px;
 }
 .logout {
   font-family: "Helvetica", sans-serif;
@@ -180,4 +198,5 @@ nav, .navbar {
   padding: 10px;
   border: dotted 1px grey;
 }
+
 

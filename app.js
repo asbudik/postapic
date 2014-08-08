@@ -147,7 +147,8 @@ app.get('/result', function(req, res) {
           var foundPhoto = randomPhoto.imageUrl;
         }
         res.render("result", {isAuthenticated: req.isAuthenticated(),
-        foundPhoto: foundPhoto, photoId: photoId, user: req.user})
+        foundPhoto: foundPhoto, photoId: photoId, user: req.user,
+        searchpic: req.query.searchpic, searchTerm: req.query.searchTerm})
       }
     })
   }

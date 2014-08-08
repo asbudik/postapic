@@ -2,11 +2,13 @@
 
   <div class="centertweets">
     <h1 class="title"><%= user.username %></h1>
-    <% for (i = 0; i < 3; i++) { %>
+    <div class="tweetcontainer">
+    <% for (i = 0; i < 4; i++) { %>
       <% if (picture[i] !== undefined) { %>
-        <span class="clearfix col-xs-3"><%- picture[i].html %></span>
+        <span class="clearfix col-sm-3"><%- picture[i].html %></span>
         <% } %>
       <% } %>
+      </div>
     <script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
   </div>
 </div>
