@@ -9,9 +9,11 @@ module.exports = {
       },
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
-      url: { 
+      html: {
+        type: DataTypes.TEXT
+      },
+      url: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false
       },
       userId: {
@@ -23,7 +25,8 @@ module.exports = {
   },
   down: function(migration, DataTypes, done) {
     // add reverting commands here, calling 'done' when finished
+
     migration.dropTable('pictures')
-      .complete(done)
+      .complete(done);
   }
-}
+};

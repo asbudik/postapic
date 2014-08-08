@@ -9,15 +9,19 @@ module.exports = {
       },
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
-      username: { type: DataTypes.STRING,
-        allowNull: false },
-      twitterid: { type: DataTypes.STRING,
-        allowNull: false,
-        unique: true },
-      accesstoken: { type: DataTypes.STRING,
-        allowNull: false },
-      tokensecret: { type: DataTypes.STRING,
-        allowNull: false }
+      twitterid: {
+        type: DataTypes.STRING,
+        unique: true
+      },
+      username: DataTypes.STRING,
+      accesstoken: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      tokensecret: {
+        type: DataTypes.STRING,
+        allowNull: false
+      }
     })
     .complete(done);
   },
