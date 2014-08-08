@@ -1,8 +1,7 @@
 
-window.onload = function() {
-  async: false;
+
   var url = window.location;
-  
+
   // Will only work if string in href matches with location
   $('ul.nav a[href="'+ url +'"]').parent().addClass('active');
 
@@ -19,4 +18,3 @@ window.onload = function() {
   if(!d.getElementById(id)){js=d.createElement(s);js.id=id;
   js.src=p+"://platform.twitter.com/widgets.js";
   fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-}

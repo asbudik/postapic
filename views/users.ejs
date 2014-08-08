@@ -7,19 +7,21 @@
         <label for="user"> </label> <input type="text" name="username" id="user" class="tweetstatus findpic searchname" placeholder="search for users">
       </p>
       <p>
-        <button class ="btn btn-primary searchbutton">Go forth and socialize</button>
+        <button class ="btn btn-info searchbutton">Go forth and socialize</button>
       </p>
     </form>
+    <div class="userrows">
     <ul>
 
       <% users.forEach(function(user) { %>
-        <span class="clearfix col-xs-2"><li><a href="/users/<%= user.id %>"> <strong><%= user.username %></strong></a></li></span>
+        <span class="clearfix col-sm-3"><li><a href="/users/<%= user.id %>"> <strong><%= user.username %></strong></a></li></span>
       <% }) %>
 
-        <% for (i = 0; i < 97; i++) { %>
-          <a href="#"><span class="clearfix col-xs-2"><strong>username<%= i %></strong></span></a>
+        <% for (i = 0; i < 50; i++) { %>
+          <a href="#"><span class="clearfix col-sm-3"><strong>username<%= i %></strong></span></a>
         <% } %>
 
     </ul>
+  </div>
 </div>
 <% include ./partials/footer.ejs %> 

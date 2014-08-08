@@ -5,12 +5,12 @@
     <h1 class="title">Your pic</h1>
 
       <form method="post" action="/users/<%= user.id %>">
-        <input type="text" class="tweetstatus" name="status" placeholder="Tweet with status?"></input></br>
+        <input type="text" maxlength="100" class="tweetstatus" name="status" placeholder="Tweet with status?"></input></br>
         <input type="hidden" name="photo" value="<%= foundPhoto %>">
         <input type="hidden" name="photoID" value="<%= photoId %>">
-        <button id="tweet" class="btn btn-primary">Tweet it!</button>
+        <button id="tweet" class="btn btn-info">Tweet it!</button>
       </form>
-      <a href="/result/?searchTerm=<%= searchTerm %>&searchpic=<%= searchpic%>"><button class="btn btn-primary newpic">New <%= searchTerm %></button></a></br>
+      <a href="/result/?searchTerm=<%= searchTerm %>&searchpic=<%= searchpic%>"><button class="btn btn-info newpic">New <%= searchTerm %></button></a></br>
       <img class="foundphoto" src="<%= foundPhoto %>"></img>
   <% } else {%>
     <h1>Oops! Did not return any results.</h1>
