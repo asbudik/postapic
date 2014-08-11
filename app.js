@@ -117,7 +117,7 @@ app.get('/result', function(req, res) {
   if (req.query.searchpic === 'stock') {
     var searchURL ="https://api.flickr.com/services/rest/?format=json&method=flickr.photos.search&tags=" 
     + req.query.searchTerm + "&api_key=" + process.env.FLICKR_KEY 
-    + "&nojsoncallback=1&media=photos&extras=url_m&page=1&per_page=500&tag_mode=all";
+    + "&nojsoncallback=1&media=photos&extras=url_m&page=1&per_page=200&tag_mode=all&sort=relevance";
 
     request(searchURL, function(error, response, body) {
       if(!error) {
