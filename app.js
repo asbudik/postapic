@@ -18,7 +18,7 @@ var express = require("express"),
 
 // Middleware for ejs, grabbing HTML and including static files
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({extended: true})); 
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 
 app.use(morgan('dev'));
@@ -58,7 +58,7 @@ passport.use(new twitterStrategy ({
 function(accessToken, tokenSecret, profile, done) {
 
   db.user.findOrCreate({username: profile.username,
-  twitterid: profile.id, accesstoken: accessToken, 
+  twitterid: profile.id, accesstoken: accessToken,
   tokensecret: tokenSecret }).success(function(user, created) {
     console.log(profile)
     done(null, user);
@@ -108,20 +108,20 @@ function getRandomInt(min, max) {
 
 // grab photo id for unique downloads
 
-// I am calling from two potential APIs here and I wasn't 
+// I am calling from two potential APIs here and I wasn't
 // sure how to refactor this get request. Each request has
 // properties specific to one another, and I couldn't pass
 // those properties through a generic function.
 
 app.get('/result', function(req, res) {
   if (req.query.searchpic === 'stock') {
-    var searchURL ="https://api.flickr.com/services/rest/?format=json&method=flickr.photos.search&tags=" 
-    + req.query.searchTerm + "&api_key=" + process.env.FLICKR_KEY 
+    var searchURL ="https://api.flickr.com/services/rest/?format=json&method=flickr.photos.search&tags="
+    + req.query.searchTerm + "&api_key=" + process.env.FLICKR_KEY
     + "&nojsoncallback=1&media=photos&extras=url_m&page=1&per_page=200&tag_mode=all&sort=relevance";
 
     request(searchURL, function(error, response, body) {
       if(!error) {
-        
+
         var bodyData = JSON.parse(body);
         var data = bodyData.photos.photo;
         if (data[0] !== undefined) {
@@ -190,7 +190,12 @@ app.post('/users/:id', function(req, res) {
         db.user.find(req.user.id).success(function(foundUser) {
           db.picture.create({url: data.id_str, html: tweets.html}).success(function(newPicture) {
             foundUser.addPicture(newPicture).success(function(){
-                res.redirect('/users/' + req.user.id);
+              fs.unlink(photoPath, function(err) {
+                if (err) {
+                  console.log("ERROR", err)
+                }
+              })
+              res.redirect('/users/' + req.user.id);
             })
           })
         })
